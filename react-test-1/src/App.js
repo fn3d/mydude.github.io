@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import { Canvas } from '@react-three/fiber';
 
+/*
 function App() {
   return (
     <div className="App">
@@ -20,7 +21,9 @@ function App() {
     </div>
   );
 }
+*/
 
+/*
 const PRODUCTS = [
   {category: "Fruits", price: "$1", stocked: true, name: "Apple"},
   {category: "Fruits", price: "$1", stocked: true, name: "Dragonfruit"},
@@ -29,6 +32,7 @@ const PRODUCTS = [
   {category: "Vegetables", price: "$4", stocked: false, name: "Pumpkin"},
   {category: "Vegetables", price: "$1", stocked: true, name: "Peas"}
 ];
+*/
 
 function MyButton() {
   return (
@@ -75,9 +79,9 @@ export default function MyButtonApp() {
     <div className='body'>
       <div className='main-container'>
         <h1>
-          Welcome to my app, bro.
+          Welcome to my app, my dude.
         </h1>
-        <MyButton />
+        {/* <MyButton />*/}
       </div>
     </div>
   );

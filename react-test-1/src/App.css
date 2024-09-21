@@ -37,17 +37,23 @@
   }
 }
 
-.body {
-  background-color: pink;
+body {
+  background-color: white;
   display: flex;
   justify-content: center;
   padding: 20px;
 }
 
+h1 {
+  color: white;
+  padding-left: 20px;
+}
+
 .main-container {
-  background-color: orange;
+  background-color: darkorange;
   display: flex;
   flex-direction: column;
   padding: 10px;
   width: 800px;
+  border-radius: 15px 15px 0px 0px;
 }
