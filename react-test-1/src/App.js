@@ -1,6 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
 import { Canvas } from '@react-three/fiber';
+import { StrictMode } from 'react';
+import { createRoot } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
 
 /*
 function App() {
@@ -69,7 +72,9 @@ function ButtonsContainer() {
 function CanvasContainer() {
   return(
     <div className="canvasContainer">
+      <div className="fiberContainer">
 
+      </div>
     </div>
   );
 }
@@ -81,7 +86,17 @@ export default function MyButtonApp() {
         <h1>
           Welcome to my site, my dude.
         </h1>
-        {/* <MyButton />*/}
+        {
+          <StrictMode>
+            <Canvas camera={{ position: [5, 3, 5], fov: 35 }} gl={{ antialias: false }}>
+              <mesh>
+                <boxGeometry args={[3, 2, 2]} />
+                <meshBasicMaterial color={0xffffff} wireframe />
+              </mesh>
+              <OrbitControls />
+            </Canvas>
+          </StrictMode>
+        }
       </div>
     </div>
   );
