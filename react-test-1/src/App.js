@@ -79,7 +79,7 @@ export default function MyButtonApp() {
     <div className='body'>
       <div className='main-container'>
         <h1>
-          Welcome to my app, my dude.
+          Welcome to my site, my dude.
         </h1>
         {/* <MyButton />*/}
       </div>
