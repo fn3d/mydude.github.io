@@ -49,6 +49,7 @@ function MainPanel() {
   return (
     <div className="mainPanel">
       <ButtonsContainer />
+      <CanvasContainer />
     </div>
   );
 }
@@ -56,15 +57,7 @@ function MainPanel() {
 function ButtonsContainer() {
   return (
     <div className="buttonsContainer">
-      <button>
-        Button 1
-      </button>
-      <button>
-        Button 2
-      </button>
-      <button>
-        Button 3
-      </button>
+      
     </div>
   );
 }
@@ -72,9 +65,29 @@ function ButtonsContainer() {
 function CanvasContainer() {
   return(
     <div className="canvasContainer">
-      <div className="fiberContainer">
-
-      </div>
+      {
+        <StrictMode>
+          <Canvas camera={{ position: [5, 3, 5], fov: 35 }} gl={{ antialias: false }} shadows>
+            <mesh castShadow receiveShadow>
+              <boxGeometry args={[3, 2, 2]} />
+              <meshPhongMaterial 
+                color={0xFFD500}
+                shininess={0.0}
+                polygonOffset={true}
+                polygonOffsetFactor={1}/>
+              <mesh>
+                <boxGeometry args={[3, 2, 2]} />
+                <meshPhongMaterial color={0x000000} shininess={0.0} wireframe/>
+              </mesh>
+            </mesh>
+            <OrbitControls />
+            <ambientLight intensity={1.0} />
+            <directionalLight position={[3, 2, 5]} intensity={1.5} />
+            <directionalLight position={[-3, 2, -5]} intensity={1.0} />
+            <directionalLight position={[-3, 6, 5]} intensity={1.0} />
+          </Canvas>
+        </StrictMode>
+      }
     </div>
   );
 }
@@ -82,21 +95,11 @@ function CanvasContainer() {
 export default function MyButtonApp() {
   return (
     <div className='body'>
-      <div className='main-container'>
+      <div className='mainContainer'>
         <h1>
-          Welcome to my site, my dude.
+          Welcome to the site, my dude.
         </h1>
-        {
-          <StrictMode>
-            <Canvas camera={{ position: [5, 3, 5], fov: 35 }} gl={{ antialias: false }}>
-              <mesh>
-                <boxGeometry args={[3, 2, 2]} />
-                <meshBasicMaterial color={0xffffff} wireframe />
-              </mesh>
-              <OrbitControls />
-            </Canvas>
-          </StrictMode>
-        }
+        <MainPanel />
       </div>
     </div>
   );

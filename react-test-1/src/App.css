@@ -46,10 +46,10 @@ body {
 
 h1 {
   color: white;
-  padding-left: 20px;
+  padding-left: 10px;
 }
 
-.main-container {
+.mainContainer {
   background-color: darkorange;
   display: flex;
   flex-direction: column;
@@ -59,6 +59,30 @@ h1 {
   border-radius: 15px 15px 0px 0px;
 }
 
-Canvas {
-  background-color: darkorange;
+.buttonsContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin-right: 10px;
+  width: 200px;
+  border-radius: 5px;
+  border-style: dashed;
+  border-width: 5px;
+  border-color: white;
+  background-color: darkkhaki;
+}
+
+.mainPanel {
+  display: flex;
+  flex-direction: row;
+  height: 430px;
+  padding: 10px;
+}
+
+.canvasContainer {
+  width: 100%;
+  border-style: dashed;
+  border-radius: 5px;
+  border-color: white;
+  border-width: 5px;
 }
