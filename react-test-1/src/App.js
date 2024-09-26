@@ -1,69 +1,51 @@
-import logo from './logo.svg';
 import './App.css';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useThree } from '@react-three/fiber';
 import { StrictMode } from 'react';
-import { createRoot } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
+import { useState } from 'react';
+import { SceneProvider, useScene } from './scene/sceneContext';
 
-/*
-function App() {
+function PanelButton({buttonString, theFunction}) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          This is amazing!
-        </p>
-        <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-*/
-
-/*
-const PRODUCTS = [
-  {category: "Fruits", price: "$1", stocked: true, name: "Apple"},
-  {category: "Fruits", price: "$1", stocked: true, name: "Dragonfruit"},
-  {category: "Fruits", price: "$2", stocked: false, name: "Passionfruit"},
-  {category: "Vegetables", price: "$2", stocked: true, name: "Spinach"},
-  {category: "Vegetables", price: "$4", stocked: false, name: "Pumpkin"},
-  {category: "Vegetables", price: "$1", stocked: true, name: "Peas"}
-];
-*/
-
-function MyButton() {
-  return (
-    <button>
-      I'm a button.
+    <button className="panelButton" onClick={() => PerformActionOnClick(theFunction)}>
+      { buttonString }
     </button>
   );
 }
 
+function PerformActionOnClick(theFunction) {
+  
+}
+
 function MainPanel() {
   return (
-    <div className="mainPanel">
-      <ButtonsContainer />
-      <CanvasContainer />
-    </div>
+    <SceneProvider>
+      <div className="mainPanel">
+        <ButtonsContainer />
+        <CanvasContainer />
+      </div>
+    </SceneProvider>
   );
 }
 
 function ButtonsContainer() {
+  const [stateVar, setState] = useState(null);
+  const { scene } = useScene();
   return (
     <div className="buttonsContainer">
-      
+      <div className="statusField">
+        { stateVar }
+      </div>
+      <PanelButton buttonString="1" theFunction={ setState } theScene={ scene }/>
+      <PanelButton buttonString="2" theFunction={ setState }/>
+      <PanelButton buttonString="3" theFunction={ setState }/>
+      <PanelButton buttonString="4" theFunction={ setState }/>
     </div>
   );
 }
 
 function CanvasContainer() {
-  return(
+  return (
     <div className="canvasContainer">
       {
         <StrictMode>
@@ -76,13 +58,15 @@ function CanvasContainer() {
                 polygonOffset={true}
                 polygonOffsetFactor={1}/>
               <mesh>
+                castShadow
+                receiveShadow
                 <boxGeometry args={[3, 2, 2]} />
                 <meshPhongMaterial color={0x000000} shininess={0.0} wireframe/>
               </mesh>
             </mesh>
             <OrbitControls />
             <ambientLight intensity={1.0} />
-            <directionalLight position={[3, 2, 5]} intensity={1.5} />
+            <directionalLight position={[3, 2, 5]} intensity={1.5} castShadow />
             <directionalLight position={[-3, 2, -5]} intensity={1.0} />
             <directionalLight position={[-3, 6, 5]} intensity={1.0} />
           </Canvas>
@@ -92,7 +76,7 @@ function CanvasContainer() {
   );
 }
 
-export default function MyButtonApp() {
+export default function App() {
   return (
     <div className='body'>
       <div className='mainContainer'>
@@ -104,5 +88,3 @@ export default function MyButtonApp() {
     </div>
   );
 }
-
-//export default App;

@@ -61,7 +61,7 @@ h1 {
 
 .buttonsContainer {
   display: flex;
-  flex-direction: column;
+  flex-flow: wrap;
   padding: 10px;
   margin-right: 10px;
   width: 200px;
@@ -70,6 +70,7 @@ h1 {
   border-width: 5px;
   border-color: white;
   background-color: darkkhaki;
+  align-content: center;
 }
 
 .mainPanel {
@@ -85,4 +86,42 @@ h1 {
   border-radius: 5px;
   border-color: white;
   border-width: 5px;
+}
+
+.panelButton {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  border-style: solid;
+  border-color: white;
+  background-color: darkgray;
+  border-width: 3px;
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
+  margin: 7px;
+}
+
+.panelButton:hover {
+  background-color: darkolivegreen;
+}
+
+.panelButton:active {
+  background-color: black;
+}
+
+.statusField {
+  width: 128px;
+  height: 60px;
+  text-align: center;
+  align-content: center;
+  border-radius: 10px;
+  border-style: solid;
+  border-color: white;
+  background-color: darkolivegreen;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  border-width: 3px;
+  margin: 7px;
 }
