@@ -1,9 +1,10 @@
 import './App.css';
-import { Canvas, useThree } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { StrictMode } from 'react';
 import { OrbitControls } from '@react-three/drei';
 import { useState } from 'react';
-import { SceneProvider, useScene } from './scene/sceneContext';
+import { SceneProvider, SceneSetter, useScene } from './scene/sceneContext';
+import { createPrimitive } from './scene/geom';
 
 function PanelButton({buttonString, theFunction}) {
   return (
@@ -29,22 +30,28 @@ function MainPanel() {
 }
 
 function ButtonsContainer() {
+
   const [stateVar, setState] = useState(null);
-  const { scene } = useScene();
+  const buttonLabels = ["1", "2", "3", "4"];
+
   return (
     <div className="buttonsContainer">
       <div className="statusField">
         { stateVar }
       </div>
-      <PanelButton buttonString="1" theFunction={ setState } theScene={ scene }/>
-      <PanelButton buttonString="2" theFunction={ setState }/>
-      <PanelButton buttonString="3" theFunction={ setState }/>
-      <PanelButton buttonString="4" theFunction={ setState }/>
+      {buttonLabels.map((label, index) => (
+        <PanelButton
+          key={index}
+          buttonString={label}
+          theFunction={useState}
+        />
+      ))}
     </div>
   );
 }
 
 function CanvasContainer() {
+  <SceneSetter />
   return (
     <div className="canvasContainer">
       {

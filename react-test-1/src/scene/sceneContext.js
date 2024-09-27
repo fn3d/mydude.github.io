@@ -20,6 +20,11 @@ export const SceneProvider = ({ children }) => {
     );
 };
 
+// Here we are writing a custom hook called useScene, so
+// that we do not have to write useContext(SceneContext) 
+// wherever the scene context is required.
+export const useScene = () => useContext(SceneContext);
+
 // This component when put inside the Canvas component grabs
 // the internal scene from the Canvas using useThree, and then
 // applies it to the scene context we created in sceneContext.js.
@@ -28,11 +33,6 @@ export const SceneSetter = () => {
     const { scene } = useThree();
     const { setScene } = useScene();
     setScene(scene);
-    
-    return null;
-  }
 
-// Here we are writing a custom hook called useScene, so
-// that we do not have to write useContext(SceneContext) 
-// wherever the scene context is required.
-export const useScene = () => useContext(SceneContext);
+    return null;
+}
