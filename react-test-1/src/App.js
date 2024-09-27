@@ -6,16 +6,26 @@ import { useState } from 'react';
 import { SceneProvider, SceneSetter, useScene } from './scene/sceneContext';
 import { createPrimitive } from './scene/geom';
 
-function PanelButton({buttonString, theFunction}) {
+function PanelButton({buttonString, onClick}) {
   return (
-    <button className="panelButton" onClick={() => PerformActionOnClick(theFunction)}>
+    <button className="panelButton" onClick={() => onClick(buttonString)}>
       { buttonString }
     </button>
   );
 }
 
-function PerformActionOnClick(theFunction) {
-  
+function PerformActionOnClick(buttonString) {
+
+  switch (buttonString) {
+    case "1":
+      return [createPrimitive("box"), "Box"];
+    case "2":
+      return [createPrimitive("sphere"), "Sphere"];
+    case "3":
+      return [createPrimitive("cylinder"), "Cylinder"];
+    case "4":
+      return [createPrimitive("cone"), "Cone"];
+  }
 }
 
 function MainPanel() {
@@ -23,7 +33,6 @@ function MainPanel() {
     <SceneProvider>
       <div className="mainPanel">
         <ButtonsContainer />
-        <CanvasContainer />
       </div>
     </SceneProvider>
   );
@@ -31,46 +40,43 @@ function MainPanel() {
 
 function ButtonsContainer() {
 
-  const [stateVar, setState] = useState(null);
+  const [stateVar, setState] = useState("Box");
+  const [primitive, setPrimitive] = useState(createPrimitive("box"));
   const buttonLabels = ["1", "2", "3", "4"];
 
+  const handleClick = (buttonString) => {
+    const [newPrimitive, desiredStateVal] = PerformActionOnClick(buttonString);
+    setState(desiredStateVal);
+    setPrimitive(newPrimitive);
+  }
+
   return (
-    <div className="buttonsContainer">
-      <div className="statusField">
-        { stateVar }
+    <>
+      <div className="buttonsContainer">
+        <div className="statusField">
+          { stateVar }
+        </div>
+        {buttonLabels.map((label, index) => (
+          <PanelButton
+            key={index}
+            buttonString={label}
+            onClick={handleClick}
+          />
+        ))}
       </div>
-      {buttonLabels.map((label, index) => (
-        <PanelButton
-          key={index}
-          buttonString={label}
-          theFunction={useState}
-        />
-      ))}
-    </div>
+      <CanvasContainer primitive={primitive} />
+    </>
   );
 }
 
-function CanvasContainer() {
+function CanvasContainer({primitive}) {
   <SceneSetter />
   return (
     <div className="canvasContainer">
       {
         <StrictMode>
           <Canvas camera={{ position: [5, 3, 5], fov: 35 }} gl={{ antialias: false }} shadows>
-            <mesh castShadow receiveShadow>
-              <boxGeometry args={[3, 2, 2]} />
-              <meshPhongMaterial 
-                color={0xFFD500}
-                shininess={0.0}
-                polygonOffset={true}
-                polygonOffsetFactor={1}/>
-              <mesh>
-                castShadow
-                receiveShadow
-                <boxGeometry args={[3, 2, 2]} />
-                <meshPhongMaterial color={0x000000} shininess={0.0} wireframe/>
-              </mesh>
-            </mesh>
+            { primitive }
             <OrbitControls />
             <ambientLight intensity={1.0} />
             <directionalLight position={[3, 2, 5]} intensity={1.5} castShadow />
