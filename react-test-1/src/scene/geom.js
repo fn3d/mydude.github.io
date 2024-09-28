@@ -20,6 +20,11 @@ export function createPrimitive(primType) {
             break;
     }
 
+    // We need to clone the geometry for the mesh wireframe
+    // because R3F works differently. We cannot use the same
+    // geom object above for both the solid representation
+    // and the wireframe, as it would then imply both are
+    // the same object.
     const wireframeGeom = geom.clone();
 
     return (

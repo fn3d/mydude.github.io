@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { StrictMode } from 'react';
 import { OrbitControls } from '@react-three/drei';
 import { useState } from 'react';
-import { SceneProvider, SceneSetter, useScene } from './scene/sceneContext';
+import { SceneProvider, SceneSetter } from './scene/sceneContext';
 import { createPrimitive } from './scene/geom';
 
 function PanelButton({buttonString, onClick}) {
@@ -50,19 +50,19 @@ function ButtonsContainer() {
 
 	return (
 		<>
-		<div className="buttonsContainer">
-			<div className="statusField">
-			{ stateVar }
+			<div className="buttonsContainer">
+				<div className="statusField">
+				{ stateVar }
+				</div>
+				{buttonLabels.map((label, index) => (
+				<PanelButton
+					key={index}
+					buttonString={label}
+					onClick={handleClick}
+				/>
+				))}
 			</div>
-			{buttonLabels.map((label, index) => (
-			<PanelButton
-				key={index}
-				buttonString={label}
-				onClick={handleClick}
-			/>
-			))}
-		</div>
-		<CanvasContainer primitive={primitive} />
+			<CanvasContainer primitive={primitive} />
 		</>
 	);
 }
@@ -75,11 +75,11 @@ function CanvasContainer({primitive}) {
 			<StrictMode>
 			<Canvas camera={{ position: [5, 3, 5], fov: 35 }} gl={{ antialias: false }} shadows>
 				{ primitive }
-				<OrbitControls />
-				<ambientLight intensity={1.0} />
+				<OrbitControls dampingFactor={0.175}/>
+				<ambientLight intensity={1.25} />
 				<directionalLight position={[3, 2, 5]} intensity={1.5} castShadow />
-				<directionalLight position={[-3, 2, -5]} intensity={1.0} />
-				<directionalLight position={[-3, 6, 5]} intensity={1.0} />
+				<directionalLight position={[-3, 2, -5]} intensity={0.5} color={0x00FFA2} />
+				<directionalLight position={[-3, 6, 5]} intensity={0.5} color={0x00FFA2} />
 			</Canvas>
 			</StrictMode>
 		}
