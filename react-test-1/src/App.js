@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { SceneProvider, SceneSetter } from './scene/sceneContext';
 import { createPrimitive } from './scene/geom';
 
+// Set up the button with a pointer to a PerformActionOnClick.
 function PanelButton({buttonString, onClick}) {
 	return (
 		<button className="panelButton" onClick={() => onClick(buttonString)}>
@@ -27,6 +28,10 @@ function PerformActionOnClick(buttonString) {
 	}
 }
 
+// The main container which the SceneProvider feeds with the Scene
+// context for the Canvas to display. ButtonsContainer encompasses
+// the CanvasContainer, so that the generated 3D primitive can be
+// directly passed to the CanvasContainer as a prop to be displayed.
 function MainPanel() {
 	return (
 		<SceneProvider>
@@ -37,11 +42,23 @@ function MainPanel() {
 	);
 }
 
+// This houses all the buttons as well as the object label, and for
+// that reason it is responsible for setting up two important
+// hooks: (a) the state for the object label which essentially
+// provides a means for setting the text without the label when
+// a button is pressed, and (b) the hook for setting a new object
+// in the scene. 
 function ButtonsContainer() {
 	const [stateVar, setState] = useState("Box");
 	const [primitive, setPrimitive] = useState(createPrimitive("box"));
 	const buttonLabels = ["1", "2", "3", "4"];
 
+	// The button click is being set up inside the parent container
+	// because we also want to set the state of the object label based
+	// on the button pressed. This will be done using the setState, and
+	// the other purpose of this method is to give each button access
+	// to another function which is responsible for generating the 
+	// primitive object.
 	const handleClick = (buttonString) => {
 		const [newPrimitive, desiredStateVal] = PerformActionOnClick(buttonString);
 		setState(desiredStateVal);
@@ -52,7 +69,7 @@ function ButtonsContainer() {
 		<>
 			<div className="buttonsContainer">
 				<div className="statusField">
-				{ stateVar }
+					{ stateVar }
 				</div>
 				{buttonLabels.map((label, index) => (
 				<PanelButton
@@ -67,6 +84,13 @@ function ButtonsContainer() {
 	);
 }
 
+// Two things to note in this component are the SceneSetter, and
+// the inclusion of the primitive which is being to here as a
+// prop. SceneSetter is responsible for grabbing the Scene
+// context using the useThree hook, and push it to the scene
+// context created seperately in sceneContext.js. The primitive
+// is being passed here from the ButtonsContainer parent once
+// the geometry has been prepared in geom.js.
 function CanvasContainer({primitive}) {
 	<SceneSetter />
 	return (
@@ -90,12 +114,12 @@ function CanvasContainer({primitive}) {
 export default function App() {
 	return (
 		<div className='body'>
-		<div className='mainContainer'>
-			<h1>
-			Welcome to the site, my dude.
-			</h1>
-			<MainPanel />
-		</div>
+			<div className='mainContainer'>
+				<h1>
+				Welcome to the site, my dude.
+				</h1>
+				<MainPanel />
+			</div>
 		</div>
 	);
 }
