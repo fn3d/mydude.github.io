@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { SceneProvider, SceneSetter } from './scene/sceneContext';
 import { createPrimitive } from './scene/geom';
 
+
 // Set up the button with a pointer to a PerformActionOnClick.
 function PanelButton({buttonString, onClick}) {
 	return (
@@ -15,16 +16,24 @@ function PanelButton({buttonString, onClick}) {
 	);
 }
 
+function TestImage({imgName}) {
+	return (
+		<div className="testImageContainer">
+			<img src={require("../public/images/" + imgName)} className='testImage' alt={imgName} />
+		</div>
+	);
+}
+
 function PerformActionOnClick(buttonString) {
 	switch (buttonString) {
 		case "1":
-		return [createPrimitive("box"), "Box"];
+		return [createPrimitive("box"), "Box", "locker.png"];
 		case "2":
-		return [createPrimitive("sphere"), "Sphere"];
+		return [createPrimitive("sphere"), "Sphere", "sphere.png"];
 		case "3":
-		return [createPrimitive("cylinder"), "Cylinder"];
+		return [createPrimitive("cylinder"), "Cylinder", "can.png"];
 		case "4":
-		return [createPrimitive("cone"), "Cone"];
+		return [createPrimitive("cone"), "Cone", "bulb.png"];
 	}
 }
 
@@ -50,6 +59,7 @@ function MainPanel() {
 // in the scene. 
 function ButtonsContainer() {
 	const [stateVar, setState] = useState("Box");
+	const [imgStateVar, setImage] = useState("locker.png");
 	const [primitive, setPrimitive] = useState(createPrimitive("box"));
 	const buttonLabels = ["1", "2", "3", "4"];
 
@@ -60,14 +70,18 @@ function ButtonsContainer() {
 	// to another function which is responsible for generating the 
 	// primitive object.
 	const handleClick = (buttonString) => {
-		const [newPrimitive, desiredStateVal] = PerformActionOnClick(buttonString);
+		const [newPrimitive, desiredStateVal, imgName] = PerformActionOnClick(buttonString);
 		setState(desiredStateVal);
 		setPrimitive(newPrimitive);
+		setImage(imgName);
 	}
 
 	return (
 		<>
 			<div className="buttonsContainer">
+				<TestImage
+					imgName = { imgStateVar }
+				/>
 				<div className="statusField">
 					{ stateVar }
 				</div>
