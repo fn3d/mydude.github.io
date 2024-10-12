@@ -35,7 +35,7 @@ export function createPrimitive(primType) {
             shininess={0.0}
             polygonOffset={true}
             polygonOffsetFactor={1}/>
-            <mesh>
+            <mesh name="test">
                 <primitive object={wireframeGeom} />
                 <meshBasicMaterial color={0x000000} wireframe/>
             </mesh>

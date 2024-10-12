@@ -1,11 +1,10 @@
 import './App.css';
-import { Canvas } from '@react-three/fiber';
-import { StrictMode } from 'react';
+import * as THREE from 'three';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { StrictMode, useRef, useState } from 'react';
 import { OrbitControls } from '@react-three/drei';
-import { useState } from 'react';
-import { SceneProvider, SceneSetter } from './scene/sceneContext';
+import { SceneProvider, SceneSetter, useScene } from './scene/sceneContext';
 import { createPrimitive } from './scene/geom';
-
 
 // Set up the button with a pointer to a PerformActionOnClick.
 function PanelButton({buttonString, onClick}) {
@@ -79,9 +78,11 @@ function ButtonsContainer() {
 	return (
 		<>
 			<div className="buttonsContainer">
+				{/*
 				<TestImage
 					imgName = { imgStateVar }
 				/>
+				*/}
 				<div className="statusField">
 					{ stateVar }
 				</div>
@@ -98,6 +99,39 @@ function ButtonsContainer() {
 	);
 }
 
+function Foo() {
+	useFrame((state, delta, xrFrame) => {
+	  // This function runs at the native refresh rate inside of a shared render-loop
+	  console.log("Frames flippin'!");
+	})
+}
+
+function RayCast({mousePos, scene, camera, renderer}) {
+
+	const rcRef = useRef(new THREE.Raycaster());
+	const rcRefOld = new THREE.Raycaster();
+
+	// Get mouse coordinates
+
+	// Register event listener and pass the click handler
+
+	// Update raycaster every frame
+	useFrame(() => {
+		if (scene && mousePos && camera && renderer) {
+			rcRef.current.setFromCamera(mousePos, camera);
+			let intersects = rcRef.current.intersectObjects(scene.children);
+			let canvasBounds = renderer.domElement.getBoundingClientRect();
+			/*
+			if (intersects.length > 0) {
+				console.log("HIT");
+			} else {
+				console.log("NOTHING");
+			}
+			*/
+		}
+	})
+}
+
 // Two things to note in this component are the SceneSetter, and
 // the inclusion of the primitive which is being to here as a
 // prop. SceneSetter is responsible for grabbing the Scene
@@ -106,19 +140,45 @@ function ButtonsContainer() {
 // is being passed here from the ButtonsContainer parent once
 // the geometry has been prepared in geom.js.
 function CanvasContainer({primitive}) {
-	<SceneSetter />
+
+	const mousePos = new THREE.Vector2;
+	const { renderer, scene, camera } = useScene();
+
+	const handleMouseClick = (event) => {
+		//mousePos.x = (event.clientX / window.innerWidth) * 2 - 1;
+		//mousePos.y = (event.clientY / window.innerHeight) * 2 - 1;
+	}
+
+	const handleMouseMove = (event) => {
+		mousePos.x = (event.clientX / window.innerWidth) * 2 - 1;
+		mousePos.y = (event.clientY / window.innerHeight) * 2 - 1;
+	}
+
 	return (
 		<div className="canvasContainer">
 		{
 			<StrictMode>
-			<Canvas camera={{ position: [5, 3, 5], fov: 35 }} gl={{ antialias: false }} shadows>
-				{ primitive }
-				<OrbitControls dampingFactor={0.175}/>
-				<ambientLight intensity={1.25} />
-				<directionalLight position={[3, 2, 5]} intensity={1.5} castShadow />
-				<directionalLight position={[-3, 2, -5]} intensity={0.5} color={0x00FFA2} />
-				<directionalLight position={[-3, 6, 5]} intensity={0.5} color={0x00FFA2} />
-			</Canvas>
+				<Canvas 
+					camera={{ position: [5, 3, 5], fov: 35 }}
+					gl={{ antialias: false }}
+					shadows
+					onMouseDown={ handleMouseClick }
+					onMouseMove={ handleMouseMove }
+				>
+					<SceneSetter />
+					{ primitive }
+					<OrbitControls dampingFactor={0.175}/>
+					<ambientLight intensity={1.25} />
+					<directionalLight position={[3, 2, 5]} intensity={1.5} castShadow />
+					<directionalLight position={[-3, 2, -5]} intensity={0.5} color={0x00FFA2} />
+					<directionalLight position={[-3, 6, 5]} intensity={0.5} color={0x00FFA2} />
+					<RayCast 
+						mousePos={ mousePos }
+						scene={ scene }
+						camera={ camera }
+						renderer={ renderer }
+					/>
+				</Canvas>
 			</StrictMode>
 		}
 		</div>
