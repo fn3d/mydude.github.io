@@ -109,25 +109,12 @@ function Foo() {
 function RayCast({mousePos, scene, camera, renderer}) {
 
 	const rcRef = useRef(new THREE.Raycaster());
-	const rcRefOld = new THREE.Raycaster();
-
-	// Get mouse coordinates
-
-	// Register event listener and pass the click handler
 
 	// Update raycaster every frame
 	useFrame(() => {
 		if (scene && mousePos && camera && renderer) {
 			rcRef.current.setFromCamera(mousePos, camera);
 			let intersects = rcRef.current.intersectObjects(scene.children);
-			let canvasBounds = renderer.domElement.getBoundingClientRect();
-			/*
-			if (intersects.length > 0) {
-				console.log("HIT");
-			} else {
-				console.log("NOTHING");
-			}
-			*/
 		}
 	})
 }
@@ -149,9 +136,11 @@ function CanvasContainer({primitive}) {
 		//mousePos.y = (event.clientY / window.innerHeight) * 2 - 1;
 	}
 
+	let canvasBounds = renderer ? renderer.domElement.getBoundingClientRect() : 
+		{ left: 0, top: 0, width: 1, height: 1 };
 	const handleMouseMove = (event) => {
-		mousePos.x = (event.clientX / window.innerWidth) * 2 - 1;
-		mousePos.y = (event.clientY / window.innerHeight) * 2 - 1;
+		mousePos.x = (event.clientX - canvasBounds.left) / canvasBounds.width * 2 - 1;
+		mousePos.y = -((event.clientY - canvasBounds.top) / canvasBounds.height) * 2 + 1;
 	}
 
 	return (
