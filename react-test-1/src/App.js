@@ -51,13 +51,14 @@ function MainPanel() {
 	);
 }
 
-function CanvasUISpace({raycastCoords, mouseCoords}) {
+function CanvasUISpace({raycastCoords, mouseCoords, showCoords}) {
 
 	return (
 		<div className="canvasUISpace">
 			<DynamicLabel 
 				raycastCoords={ raycastCoords }
 				mouseCoords={ mouseCoords }
+				showCoords={ showCoords }
 			/>
 		</div>
 	);
@@ -68,6 +69,7 @@ function CanvasMain({primitive}) {
 	const { renderer, scene, camera } = useScene();
 	const [ raycastCoords, setCoords ] = useState();
 	const [ mouseCoords, setMouseCoords ] = useState();
+	const [ showCoords, setShowCoordsType ] = useState();
 
 	// Need to use useEffect here to avoid an infinite
 	// rendering loop. We do need to initialize the
@@ -75,6 +77,7 @@ function CanvasMain({primitive}) {
 	useEffect(() => {
 		setCoords(null);
 		setMouseCoords(new THREE.Vector2());
+		setShowCoordsType('none');
 	}, []);
 
 	return (
@@ -87,10 +90,12 @@ function CanvasMain({primitive}) {
 				coordinateSetter={ setCoords }
 				mouseCoordSetter={ setMouseCoords }
 				mouseCoords={ mouseCoords }
+				setShowCoordsType={ setShowCoordsType }
 			/>
 			<CanvasUISpace 
 				raycastCoords={ raycastCoords }
 				mouseCoords={ mouseCoords }
+				showCoords={ showCoords }
 			/>
 		</>
 	)
@@ -145,17 +150,19 @@ function ButtonsContainer() {
 	);
 }
 
-function RayCast({mouseCoords, renderer, scene, camera, coordinateSetter}) {
+function RayCast({mouseCoords, scene, camera, coordinateSetter, setShowCoordsType}) {
 
 	const rcRef = useRef(new THREE.Raycaster());
 
 	// Update raycaster every frame
 	useFrame(() => {
-		if (scene && mouseCoords && camera && renderer) {
+		if (scene && mouseCoords && camera) {
 			rcRef.current.setFromCamera(mouseCoords, camera);
 			let intersects = rcRef.current.intersectObjects(scene.children);
 			let coordStr = "";
-			if (intersects.length > 0) {
+			const vector = new THREE.Vector2(0, 0);
+			const isZero = vector.equals(mouseCoords);
+			if ((intersects.length > 0) && (isZero === false)) {
 				//console.log(intersects[0].point);
 				const array = [intersects[0].point.x,
 							   intersects[0].point.y,
@@ -170,9 +177,11 @@ function RayCast({mouseCoords, renderer, scene, camera, coordinateSetter}) {
 								 roundedPoint[1].toString() + ", " + 
 								 roundedPoint[2].toString() ;
 				coordinateSetter(coordStr);
+				setShowCoordsType('inline-block');
 			} else {
 				coordStr = "0.0, 0.0, 0.0";
 				coordinateSetter(coordStr);
+				setShowCoordsType('none');
 			}
 		}
 	})
@@ -185,7 +194,7 @@ function RayCast({mouseCoords, renderer, scene, camera, coordinateSetter}) {
 // context created seperately in sceneContext.js. The primitive
 // is being passed here from the ButtonsContainer parent once
 // the geometry has been prepared in geom.js.
-function CanvasContainer({primitive, renderer, scene, camera, coordinateSetter, mouseCoordSetter, mouseCoords}) {
+function CanvasContainer({primitive, renderer, scene, camera, coordinateSetter, mouseCoordSetter, mouseCoords, setShowCoordsType}) {
 
 	const handleMouseClick = (event) => {
 		//mousePos.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -222,8 +231,8 @@ function CanvasContainer({primitive, renderer, scene, camera, coordinateSetter, 
 						mouseCoords={ mouseCoords }
 						scene={ scene }
 						camera={ camera }
-						renderer={ renderer }
 						coordinateSetter={ coordinateSetter }
+						setShowCoordsType={ setShowCoordsType }
 					/>
 				</Canvas>
 			</StrictMode>

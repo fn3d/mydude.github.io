@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 
-export function DynamicLabel({ raycastCoords, mouseCoords }) {
+export function DynamicLabel({ raycastCoords, mouseCoords, showCoords }) {
 
     return (
         <div className="dynamicLabel"
             style={{
-                display: 'inline-block',
+                display: showCoords,
                 position: 'absolute',
                 textAlign: 'center',
                 height: '25px',
@@ -14,10 +14,12 @@ export function DynamicLabel({ raycastCoords, mouseCoords }) {
                 color: 'white',
                 borderRadius: '7px',
                 lineHeight: '25px',
-                paddingLeft: '7px',
-                paddingRight: '7px',
+                paddingLeft: '10px',
+                paddingRight: '10px',
                 fontSize: '13px',
-                boxShadow: '2px 2px 5px 1px #434343'
+                boxShadow: '2px 2px 5px 1px #434343',
+                marginLeft: '10px',
+                marginTop: '10px',
             }}
         >
             { raycastCoords }
