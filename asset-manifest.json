@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/mydude.github.io/static/css/main.35cc434d.css",
-    "main.js": "/mydude.github.io/static/js/main.413199bc.js",
+    "main.css": "/mydude.github.io/static/css/main.2e2ea80c.css",
+    "main.js": "/mydude.github.io/static/js/main.22bc9bcc.js",
     "static/js/453.1b63c9fc.chunk.js": "/mydude.github.io/static/js/453.1b63c9fc.chunk.js",
     "static/media/locker.png": "/mydude.github.io/static/media/locker.66ab881abd0cc9c605c0.png",
     "static/media/bulb.png": "/mydude.github.io/static/media/bulb.8fa7061c103e620964e5.png",
     "static/media/sphere.png": "/mydude.github.io/static/media/sphere.194e8dd85925427129ac.png",
     "static/media/can.png": "/mydude.github.io/static/media/can.262d3ad9f58f87efb008.png",
     "index.html": "/mydude.github.io/index.html",
-    "main.35cc434d.css.map": "/mydude.github.io/static/css/main.35cc434d.css.map",
-    "main.413199bc.js.map": "/mydude.github.io/static/js/main.413199bc.js.map",
+    "main.2e2ea80c.css.map": "/mydude.github.io/static/css/main.2e2ea80c.css.map",
+    "main.22bc9bcc.js.map": "/mydude.github.io/static/js/main.22bc9bcc.js.map",
     "453.1b63c9fc.chunk.js.map": "/mydude.github.io/static/js/453.1b63c9fc.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.35cc434d.css",
-    "static/js/main.413199bc.js"
+    "static/css/main.2e2ea80c.css",
+    "static/js/main.22bc9bcc.js"
   ]
 }
