@@ -74,7 +74,7 @@ function CanvasMain({primitive}) {
 	// setter function.
 	useEffect(() => {
 		setCoords(null);
-		setMouseCoords(null);
+		setMouseCoords(new THREE.Vector2());
 	}, []);
 
 	return (
@@ -86,6 +86,7 @@ function CanvasMain({primitive}) {
 				camera={ camera }
 				coordinateSetter={ setCoords }
 				mouseCoordSetter={ setMouseCoords }
+				mouseCoords={ mouseCoords }
 			/>
 			<CanvasUISpace 
 				raycastCoords={ raycastCoords }
@@ -144,14 +145,14 @@ function ButtonsContainer() {
 	);
 }
 
-function RayCast({mousePos, renderer, scene, camera, coordinateSetter}) {
+function RayCast({mouseCoords, renderer, scene, camera, coordinateSetter}) {
 
 	const rcRef = useRef(new THREE.Raycaster());
 
 	// Update raycaster every frame
 	useFrame(() => {
-		if (scene && mousePos && camera && renderer) {
-			rcRef.current.setFromCamera(mousePos, camera);
+		if (scene && mouseCoords && camera && renderer) {
+			rcRef.current.setFromCamera(mouseCoords, camera);
 			let intersects = rcRef.current.intersectObjects(scene.children);
 			let coordStr = "";
 			if (intersects.length > 0) {
@@ -184,9 +185,7 @@ function RayCast({mousePos, renderer, scene, camera, coordinateSetter}) {
 // context created seperately in sceneContext.js. The primitive
 // is being passed here from the ButtonsContainer parent once
 // the geometry has been prepared in geom.js.
-function CanvasContainer({primitive, renderer, scene, camera, coordinateSetter, mouseCoordSetter}) {
-
-	const [ mousePos, mousePosSetter ] = useState(new THREE.Vector2());
+function CanvasContainer({primitive, renderer, scene, camera, coordinateSetter, mouseCoordSetter, mouseCoords}) {
 
 	const handleMouseClick = (event) => {
 		//mousePos.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -196,9 +195,9 @@ function CanvasContainer({primitive, renderer, scene, camera, coordinateSetter, 
 	let canvasBounds = renderer ? renderer.domElement.getBoundingClientRect() : 
 		{ left: 0, top: 0, width: 1, height: 1 };
 	const handleMouseMove = (event) => {
-		mousePos.x = (event.clientX - canvasBounds.left) / canvasBounds.width * 2 - 1;
-		mousePos.y = -((event.clientY - canvasBounds.top) / canvasBounds.height) * 2 + 1;
-		mouseCoordSetter(mousePos);
+		mouseCoords.x = (event.clientX - canvasBounds.left) / canvasBounds.width * 2 - 1;
+		mouseCoords.y = -((event.clientY - canvasBounds.top) / canvasBounds.height) * 2 + 1;
+		mouseCoordSetter(mouseCoords);
 	}
 
 	return (
@@ -220,7 +219,7 @@ function CanvasContainer({primitive, renderer, scene, camera, coordinateSetter, 
 					<directionalLight position={[-3, 2, -5]} intensity={0.5} color={0x00FFA2} />
 					<directionalLight position={[-3, 6, 5]} intensity={0.5} color={0x00FFA2} />
 					<RayCast
-						mousePos={ mousePos }
+						mouseCoords={ mouseCoords }
 						scene={ scene }
 						camera={ camera }
 						renderer={ renderer }
