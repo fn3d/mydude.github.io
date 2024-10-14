@@ -1,10 +1,11 @@
 import './App.css';
 import * as THREE from 'three';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { StrictMode, useRef, useState } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { StrictMode, useRef, useState, useEffect } from 'react';
 import { OrbitControls } from '@react-three/drei';
 import { SceneProvider, SceneSetter, useScene } from './scene/sceneContext';
-import { createPrimitive } from './scene/geom';
+import { createPrimitive, roundToDecimalPlaces } from './scene/geom';
+import { DynamicLabel } from './scene/dynamicLabel';
 
 // Set up the button with a pointer to a PerformActionOnClick.
 function PanelButton({buttonString, onClick}) {
@@ -50,12 +51,56 @@ function MainPanel() {
 	);
 }
 
+function CanvasUISpace({raycastCoords, mouseCoords}) {
+
+	return (
+		<div className="canvasUISpace">
+			<DynamicLabel 
+				raycastCoords={ raycastCoords }
+				mouseCoords={ mouseCoords }
+			/>
+		</div>
+	);
+}
+
+function CanvasMain({primitive}) {
+
+	const { renderer, scene, camera } = useScene();
+	const [ raycastCoords, setCoords ] = useState();
+	const [ mouseCoords, setMouseCoords ] = useState();
+
+	// Need to use useEffect here to avoid an infinite
+	// rendering loop. We do need to initialize the
+	// setter function.
+	useEffect(() => {
+		setCoords(null);
+		setMouseCoords(null);
+	}, []);
+
+	return (
+		<>
+			<CanvasContainer
+				primitive={ primitive }
+				renderer={ renderer }
+				scene={ scene }
+				camera={ camera }
+				coordinateSetter={ setCoords }
+				mouseCoordSetter={ setMouseCoords }
+			/>
+			<CanvasUISpace 
+				raycastCoords={ raycastCoords }
+				mouseCoords={ mouseCoords }
+			/>
+		</>
+	)
+}
+
 // This houses all the buttons as well as the object label, and for
 // that reason it is responsible for setting up two important
 // hooks: (a) the state for the object label which essentially
 // provides a means for setting the text without the label when
 // a button is pressed, and (b) the hook for setting a new object
-// in the scene. 
+// in the scene.
 function ButtonsContainer() {
 	const [stateVar, setState] = useState("Box");
 	const [imgStateVar, setImage] = useState("locker.png");
@@ -94,19 +139,12 @@ function ButtonsContainer() {
 				/>
 				))}
 			</div>
-			<CanvasContainer primitive={primitive} />
+			<CanvasMain primitive={ primitive } />
 		</>
 	);
 }
 
-function Foo() {
-	useFrame((state, delta, xrFrame) => {
-	  // This function runs at the native refresh rate inside of a shared render-loop
-	  console.log("Frames flippin'!");
-	})
-}
-
-function RayCast({mousePos, scene, camera, renderer}) {
+function RayCast({mousePos, renderer, scene, camera, coordinateSetter}) {
 
 	const rcRef = useRef(new THREE.Raycaster());
 
@@ -115,6 +153,26 @@ function RayCast({mousePos, scene, camera, renderer}) {
 		if (scene && mousePos && camera && renderer) {
 			rcRef.current.setFromCamera(mousePos, camera);
 			let intersects = rcRef.current.intersectObjects(scene.children);
+			let coordStr = "";
+			if (intersects.length > 0) {
+				//console.log(intersects[0].point);
+				const array = [intersects[0].point.x,
+							   intersects[0].point.y,
+							   intersects[0].point.z];
+				let roundedPoint = [];
+				array.forEach(element => {
+					const tempVal = roundToDecimalPlaces(element, 3);
+					roundedPoint.push(tempVal);
+				});
+				
+				coordStr = roundedPoint[0].toString() + ", " + 
+								 roundedPoint[1].toString() + ", " + 
+								 roundedPoint[2].toString() ;
+				coordinateSetter(coordStr);
+			} else {
+				coordStr = "0.0, 0.0, 0.0";
+				coordinateSetter(coordStr);
+			}
 		}
 	})
 }
@@ -126,10 +184,9 @@ function RayCast({mousePos, scene, camera, renderer}) {
 // context created seperately in sceneContext.js. The primitive
 // is being passed here from the ButtonsContainer parent once
 // the geometry has been prepared in geom.js.
-function CanvasContainer({primitive}) {
+function CanvasContainer({primitive, renderer, scene, camera, coordinateSetter, mouseCoordSetter}) {
 
-	const mousePos = new THREE.Vector2;
-	const { renderer, scene, camera } = useScene();
+	const [ mousePos, mousePosSetter ] = useState(new THREE.Vector2());
 
 	const handleMouseClick = (event) => {
 		//mousePos.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -141,6 +198,7 @@ function CanvasContainer({primitive}) {
 	const handleMouseMove = (event) => {
 		mousePos.x = (event.clientX - canvasBounds.left) / canvasBounds.width * 2 - 1;
 		mousePos.y = -((event.clientY - canvasBounds.top) / canvasBounds.height) * 2 + 1;
+		mouseCoordSetter(mousePos);
 	}
 
 	return (
@@ -161,11 +219,12 @@ function CanvasContainer({primitive}) {
 					<directionalLight position={[3, 2, 5]} intensity={1.5} castShadow />
 					<directionalLight position={[-3, 2, -5]} intensity={0.5} color={0x00FFA2} />
 					<directionalLight position={[-3, 6, 5]} intensity={0.5} color={0x00FFA2} />
-					<RayCast 
+					<RayCast
 						mousePos={ mousePos }
 						scene={ scene }
 						camera={ camera }
 						renderer={ renderer }
+						coordinateSetter={ coordinateSetter }
 					/>
 				</Canvas>
 			</StrictMode>

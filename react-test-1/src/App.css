@@ -81,11 +81,21 @@ h1 {
 }
 
 .canvasContainer {
+  position: relative;
   width: 100%;
   border-style: dashed;
   border-radius: 5px;
   border-color: white;
   border-width: 5px;
+}
+
+.canvasUISpace {
+  position: absolute;
+  width: 580px;
+  height: 390px;
+  margin-left: 195px;
+  margin-top: 6px;
+  pointer-events: none;
 }
 
 .panelButton {

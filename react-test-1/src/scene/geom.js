@@ -42,3 +42,8 @@ export function createPrimitive(primType) {
         </mesh>
     );
 }
+
+export function roundToDecimalPlaces(num, decimalPlaces) {
+    const factor = Math.pow(10, decimalPlaces);
+    return Math.round(num * factor) / factor;
+}
