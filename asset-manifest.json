@@ -1,19 +1,16 @@
 {
   "files": {
-    "main.css": "/mydude.github.io/static/css/main.2e2ea80c.css",
-    "main.js": "/mydude.github.io/static/js/main.22bc9bcc.js",
+    "main.css": "/mydude.github.io/static/css/main.8aa02b7f.css",
+    "main.js": "/mydude.github.io/static/js/main.4be03151.js",
     "static/js/453.1b63c9fc.chunk.js": "/mydude.github.io/static/js/453.1b63c9fc.chunk.js",
-    "static/media/locker.png": "/mydude.github.io/static/media/locker.66ab881abd0cc9c605c0.png",
-    "static/media/bulb.png": "/mydude.github.io/static/media/bulb.8fa7061c103e620964e5.png",
-    "static/media/sphere.png": "/mydude.github.io/static/media/sphere.194e8dd85925427129ac.png",
-    "static/media/can.png": "/mydude.github.io/static/media/can.262d3ad9f58f87efb008.png",
+    "static/media/opencascade.full.wasm": "/mydude.github.io/static/media/opencascade.full.cb9053671b4cef7d26de.wasm",
     "index.html": "/mydude.github.io/index.html",
-    "main.2e2ea80c.css.map": "/mydude.github.io/static/css/main.2e2ea80c.css.map",
-    "main.22bc9bcc.js.map": "/mydude.github.io/static/js/main.22bc9bcc.js.map",
+    "main.8aa02b7f.css.map": "/mydude.github.io/static/css/main.8aa02b7f.css.map",
+    "main.4be03151.js.map": "/mydude.github.io/static/js/main.4be03151.js.map",
     "453.1b63c9fc.chunk.js.map": "/mydude.github.io/static/js/453.1b63c9fc.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2e2ea80c.css",
-    "static/js/main.22bc9bcc.js"
+    "static/css/main.8aa02b7f.css",
+    "static/js/main.4be03151.js"
   ]
 }
